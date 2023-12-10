@@ -1,43 +1,72 @@
 "use strict";
-/* Index Signatures */
-// interface TransactionObj {
-//   Pizza: number;
-//   Books: number;
-//   Job: number;
-// }
-const todaysTransactions = {
-    //Now I can add more indx, however, i cant skip inherted onces
-    Pizza: 10,
-    Books: 5,
-    Job: 1,
-    Visit: 3,
+//Utility Types
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
-const todaysNet = (transactions) => {
-    let total = 0;
-    for (const transaction in transactions) {
-        total += transactions[transaction];
-    }
-    return total;
+const updateAssignment = (assign, propsToUpdate) => {
+    return Object.assign(Object.assign({}, assign), propsToUpdate);
 };
-console.log(todaysNet(todaysTransactions));
-const student = {
-    name: "Lokesh",
-    GPA: 5.5,
-    classes: ["Math", "Phisics"],
-    age: 26,
+const assign1 = {
+    studentId: "compis123",
+    title: "Final Project",
+    grade: 0,
 };
-// console.log(student.test);
-for (const key in student) {
-    // console.log(`${key}: ${student[key]}`); //with index signature
-    console.log(`${key}: ${student[key]}`); //without index signature
-}
-console.log("------------");
-Object.keys(student).map((key) => {
-    // console.log(key as keyof typeof student); //keys
-    console.log(student[key]); //values
+console.log(updateAssignment(assign1, { grade: 95 }));
+const assignGraded = updateAssignment(assign1, { grade: 95 });
+//Required and readonly
+const recordAssignment = (assign) => {
+    //send to database, etc
+    return assign;
+};
+const assignVerified = Object.assign(Object.assign({}, assignGraded), { verified: true });
+// assignVerified.grade = 80;
+recordAssignment(Object.assign(Object.assign({}, assignGraded), { verified: true }));
+//Record
+const hexColor = {
+    red: "ff0000",
+    green: "00fff00",
+    blue: "0000ff",
+};
+const finalGrades = {
+    Sara: "B",
+    Kelly: "U",
+};
+const gradeData = {
+    Sara: { assign1: 85, assign2: 93 },
+    Kelly: { assign1: 75, assign2: 83 },
+};
+const score = {
+    studentId: "k1234",
+    grade: 85,
+};
+const preview = {
+    studentId: "k1234",
+    title: "Final Project",
+};
+// type newAssign = { title: string; points: number };
+const createNewAssign = (title, points) => {
+    return { title, points };
+};
+const tsAssign = createNewAssign("Utility Types", 100);
+console.log(tsAssign);
+const assignArgs = ["Generics", 100];
+const tsAssign2 = createNewAssign(...assignArgs);
+console.log(tsAssign2);
+const fetchUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield fetch("https://jsonplaceholder.typicode.com/users")
+        .then((res) => {
+        return res.json();
+    })
+        .catch((err) => {
+        if (err instanceof Error)
+            console.log(err.message);
+    });
+    return data;
 });
-const logStudentKey = (student, key) => {
-    console.log(`Student ${key}: ${student[key]}`);
-};
-console.log("------------");
-console.log(logStudentKey(student, "name"));
+fetchUsers().then((users) => console.log(users));

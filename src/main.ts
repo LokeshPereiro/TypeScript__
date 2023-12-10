@@ -1,71 +1,130 @@
-/* Index Signatures */
-// interface TransactionObj {
-//   Pizza: number;
-//   Books: number;
-//   Job: number;
-// }
+//Utility Types
 
-// interface TransactionObj {
-//   readonly [index: string]: number;
-// }
+//Partial
 
-// const todaysTransactions: TransactionObj = {
-//   Pizza: 10,
-//   Books: 5,
-//   Job: 1,
-// };
-interface TransactionObj {
-  readonly [index: string]: number;
-  Pizza: 10;
-  Books: 5;
-  Job: 1;
+interface Assignament {
+  studentId: string;
+  title: string;
+  grade: number;
+  verified?: boolean;
 }
-const todaysTransactions: TransactionObj = {
-  //Now I can add more indx, however, i cant skip inherted onces
-  Pizza: 10,
-  Books: 5,
-  Job: 1,
-  Visit: 3,
+
+const updateAssignment = (
+  assign: Assignament,
+  propsToUpdate: Partial<Assignament>
+): Assignament => {
+  return { ...assign, ...propsToUpdate };
 };
 
-const todaysNet = (transactions: TransactionObj): number => {
-  let total = 0;
-  for (const transaction in transactions) {
-    total += transactions[transaction];
-  }
-  return total;
+const assign1: Assignament = {
+  studentId: "compis123",
+  title: "Final Project",
+  grade: 0,
 };
-console.log(todaysNet(todaysTransactions));
-// todaysTransactions.Pizza = 100; //cant modify since it is readonly
-// console.log(todaysTransactions["Hola"]); //undefined
 
-interface Student {
-  //Index signature
-  [key: string]: string | number | string[] | undefined;
+console.log(updateAssignment(assign1, { grade: 95 }));
+const assignGraded: Assignament = updateAssignment(assign1, { grade: 95 });
+
+//Required and readonly
+
+const recordAssignment = (assign: Required<Assignament>): Assignament => {
+  //send to database, etc
+  return assign;
+};
+
+const assignVerified: Readonly<Assignament> = {
+  ...assignGraded,
+  verified: true,
+};
+
+// assignVerified.grade = 80;
+recordAssignment({ ...assignGraded, verified: true });
+
+//Record
+const hexColor: Record<string, string> = {
+  red: "ff0000",
+  green: "00fff00",
+  blue: "0000ff",
+};
+
+type Students = "Sara" | "Kelly";
+type LetterGrades = "A" | "B" | "C" | "D" | "U";
+
+const finalGrades: Record<Students, LetterGrades> = {
+  Sara: "B",
+  Kelly: "U",
+};
+
+interface Grades {
+  assign1: number;
+  assign2: number;
+}
+
+const gradeData: Record<Students, Grades> = {
+  Sara: { assign1: 85, assign2: 93 },
+  Kelly: { assign1: 75, assign2: 83 },
+};
+
+//Pick and Omit
+type AssignResult = Pick<Assignament, "studentId" | "grade">;
+const score: AssignResult = {
+  studentId: "k1234",
+  grade: 85,
+};
+
+type AssignPreview = Omit<Assignament, "grade" | "verified">;
+
+const preview: AssignPreview = {
+  studentId: "k1234",
+  title: "Final Project",
+};
+
+//Exclude and Extract
+type adjustedGrade = Exclude<LetterGrades, "U">;
+
+type highGrades = Exclude<LetterGrades, "A" | "B">;
+
+//NonNullable
+
+type AllPossibleGrades = "Dave" | "John" | null | undefined;
+
+type readonly = NonNullable<AllPossibleGrades>;
+
+// type newAssign = { title: string; points: number };
+
+const createNewAssign = (title: string, points: number) => {
+  return { title, points };
+};
+type NewAssign = ReturnType<typeof createNewAssign>;
+
+const tsAssign: NewAssign = createNewAssign("Utility Types", 100);
+console.log(tsAssign);
+
+type AssignParams = Parameters<typeof createNewAssign>;
+
+const assignArgs: AssignParams = ["Generics", 100];
+
+const tsAssign2: NewAssign = createNewAssign(...assignArgs);
+console.log(tsAssign2);
+
+//Awaited - helps us with the ReturnType of a Promise
+interface User {
+  id: number;
   name: string;
-  GPA: number;
-  classes?: string[];
-  age: number;
+  username: string;
+  email: string;
 }
-const student: Student = {
-  name: "Lokesh",
-  GPA: 5.5,
-  classes: ["Math", "Phisics"],
-  age: 26,
-};
-// console.log(student.test);
-for (const key in student) {
-  // console.log(`${key}: ${student[key]}`); //with index signature
-  console.log(`${key}: ${student[key as keyof Student]}`); //without index signature
-}
-console.log("------------");
-Object.keys(student).map((key) => {
-  // console.log(key as keyof typeof student); //keys
-  console.log(student[key as keyof typeof student]); //values
-});
 
-const logStudentKey = (student: Student, key: keyof Student): void => {
-  console.log(`Student ${key}: ${student[key]}`);
+const fetchUsers = async (): Promise<User[]> => {
+  const data = await fetch("https://jsonplaceholder.typicode.com/users")
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      if (err instanceof Error) console.log(err.message);
+    });
+  return data;
 };
-console.log("------------");
-console.log(logStudentKey(student, "name"));
+
+type FetchUsersReturnType = Awaited<ReturnType<typeof fetchUsers>>;
+fetchUsers().then((users) => console.log(users));
