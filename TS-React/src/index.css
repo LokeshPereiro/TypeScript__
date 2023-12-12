@@ -10,6 +10,8 @@ body {
   display: grid;
   place-content: center;
   font-size: 150%;
+  /* margin: 0 auto; */
+  height: 100vh;
 }
 
 button {
