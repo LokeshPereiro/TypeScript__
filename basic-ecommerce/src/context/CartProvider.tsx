@@ -6,7 +6,8 @@ export type CartItemType = {
   price: number;
   qty: number;
 };
-type CartStateType = { cart: CartItemType[] };
+
+export type CartStateType = { cart: CartItemType[] };
 const initCartState: CartStateType = { cart: [] };
 
 const REDUCER_ACTION_TYPE = {
@@ -16,6 +17,7 @@ const REDUCER_ACTION_TYPE = {
   SUBMIT: "SUBMIT",
 };
 export type ReducerActionType = typeof REDUCER_ACTION_TYPE;
+
 export type ReducerAction = {
   type: string;
   payload?: CartItemType;

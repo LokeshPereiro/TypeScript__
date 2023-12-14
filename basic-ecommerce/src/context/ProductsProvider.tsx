@@ -1,15 +1,19 @@
 import { createContext, ReactElement, useState, useEffect } from "react";
 
+//product obj type
 export type ProductType = {
   sku: string;
   name: string;
   price: number;
 };
 
+//initial state --> Array of objs
 const initState: ProductType[] = [];
 
 export type UseProductsContextType = { products: ProductType[] };
 const initContextState: UseProductsContextType = { products: [] };
+
+//Create ctx and children type
 const ProductsContext = createContext<UseProductsContextType>(initContextState);
 type ChildrenType = { children?: ReactElement | ReactElement[] };
 
@@ -36,3 +40,4 @@ export const ProductsProvider = ({ children }: ChildrenType): ReactElement => {
     </ProductsContext.Provider>
   );
 };
+export default ProductsContext;
